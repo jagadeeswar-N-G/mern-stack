@@ -1,1 +1,1 @@
-export const DB_NAME="jagadeeswarDB"
+export const DB_NAME="JagadeeswarDB"
