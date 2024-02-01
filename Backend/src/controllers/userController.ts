@@ -6,7 +6,6 @@ import { uploadOnCloudinary } from "../utils/cloudinary.ts";
 import { ApiResponse } from "../utils/apiResponse.ts";
 import path from "path";
 
-
 interface UploadedFiles {
   avatar?: Express.Multer.File[];
   coverImage?: Express.Multer.File[];
@@ -38,21 +37,18 @@ export const registerUser = asyncHandler(
     if (userAlreadyExit) {
       throw new ApiError(409, "User with email or username is already exist");
     }
-    console.log(req.files)
-   const uploadedFiles = req.files as any;
-   const avatarLocalPath = uploadedFiles.avatar[0]?.path;
-   const coverLocalPath = uploadedFiles.coverImage[0]?.path;
-   const normalizedPath = avatarLocalPath.replace(/\\/g, "/");
-   console.log(normalizedPath);
-  
+    const uploadedFiles = req.files as any;
+    const avatarLocalPath = uploadedFiles.avatar[0]?.path;
+    const coverLocalPath = uploadedFiles.coverImage[0]?.path;
+    const normalizedPathAvatar = avatarLocalPath.replace(/\\/g, "/");
+    const normalizedPathCover = coverLocalPath.replace(/\\/g, "/");
 
-
-    if (!normalizedPath) {
+    if (!normalizedPathAvatar) {
       throw new ApiError(400, "avatar is required");
     }
 
-    const avatar = await uploadOnCloudinary(normalizedPath);
-    const coverImage = await uploadOnCloudinary(coverLocalPath!);
+    const avatar = await uploadOnCloudinary(normalizedPathAvatar);
+    const coverImage = await uploadOnCloudinary(normalizedPathCover!);
 
     // if (!avatar) {
     //   throw new ApiError(400, "avatar is required");
