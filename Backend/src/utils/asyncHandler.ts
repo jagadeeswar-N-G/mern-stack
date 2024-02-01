@@ -1,15 +1,10 @@
-import { NextFunction, Request } from "express"
- interface requestHandlerPropsT {
-   req: Request;
-   res: Response;
-   next: NextFunction;
- }
-const asyncHandler = (requestHandler: Function) => {
-  ({ req, res, next }: requestHandlerPropsT) => {
+import { NextFunction, Request, Response } from "express";
+
+export const asyncHandler = (requestHandler: Function) => {
+  (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(requestHandler(req, res, next)).catch((err) => {
       next(err);
     });
   };
 }
 
-export default asyncHandler
