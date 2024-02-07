@@ -319,3 +319,72 @@ export const updateUserAvatat = asyncHandler(
       .json(new ApiResponse(200, user, "user Avatar is updated successfully"));
   }
 );
+
+export const getUserChannelProfile = asyncHandler(
+  async (req: userRequest, res: Response) => {
+    const {username} = req.params;
+    if(!username.trim()) {
+        throw new ApiError(400, "username is required");
+    }
+
+    const channel = await User.aggregate([
+      {
+        $match: {
+          username: username?.toLowerCase(),
+        },
+      },
+      {
+        $lookup: {
+          from: "subscriptions",
+          localField: "_id",
+          foreignField: "channel",
+          as: "subscriptions",
+        },
+      },
+      {
+        $lookup: {
+          from: "subscriptions",
+          localField: "_id",
+          foreignField: "subscriber",
+          as: "subscribedTo",
+        },
+      },
+      {
+        $addFields: {
+          subscriberCount: {
+            $size: "$subscriptions",
+          },
+          subscriptionCount: {
+            $size: "$subscribedTo",
+          },
+          isSubscribed: {
+            $cond: {
+              if: {
+                $in: [req.user?._id, "$subscriptions.subscriber"],
+              },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          fullName: 1,
+          username: 1,
+          avatar: 1,
+          subscriberCount: 1,
+          subscriptionCount: 1,
+          isSubscribed: 1,
+          email: 1,
+        },
+      },
+    ]);
+
+    if (!channel?.length) {
+       throw new ApiError(404, "channel not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, channel[0]));
+  }
+);
