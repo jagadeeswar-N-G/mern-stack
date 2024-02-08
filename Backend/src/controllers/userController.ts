@@ -5,6 +5,8 @@ import { User } from "../models/userModel.ts";
 import { uploadOnCloudinary } from "../utils/cloudinary.ts";
 import { ApiResponse } from "../utils/apiResponse.ts";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+
 interface userRequest extends Request {
   user?: any;
 }
@@ -388,3 +390,49 @@ export const getUserChannelProfile = asyncHandler(
     return res.status(200).json(new ApiResponse(200, channel[0]));
   }
 );
+
+export const getUserHistory = asyncHandler(
+  async (req: userRequest, res: Response) => {
+    const user = await User.aggregate([
+      {
+        $match: {
+          Id: new mongoose.Types.ObjectId(req.user?._id),
+        }
+      }, 
+      {
+        $lookup: {
+          from: "videos",
+          localField: "watchHistory",
+          foreignField: "_id",
+          as: "watchHistory",
+          pipeline: [
+            {
+              $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [{
+                  $project: {
+                    fullName: 1,
+                    avatar: 1,
+                    username: 1,
+                  }
+                }]
+              }
+            },
+            {
+              $addFields: {
+                owner: {
+                  $first: "$owner",
+                }
+              }
+            }
+          ]
+        }
+      }
+    ])
+
+    return res.status(200).json(new ApiResponse(200, user[0].watchHistory));
+  }
+)
