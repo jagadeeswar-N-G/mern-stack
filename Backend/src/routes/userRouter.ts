@@ -34,7 +34,7 @@ router.get("/current-user", verifyJWT, getCurrentUser);
 router.patch("/update-details", verifyJWT, updateAccountDetails);
 router.patch("/avatar", verifyJWT, upload.single("avatar"), updateUserAvatar);
 router.patch("/cover", verifyJWT, upload.single("coverImage"), updateUserCover);
-router.get("/c//:username", verifyJWT, getUserChannelProfile);
+router.get("/c/:username", verifyJWT, getUserChannelProfile);
 router.get("/history", verifyJWT, getUserHistory);
 
 export default router;
