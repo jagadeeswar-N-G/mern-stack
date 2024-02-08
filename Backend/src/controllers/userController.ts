@@ -295,7 +295,7 @@ export const updateUserCover = asyncHandler(
       .json(new ApiResponse(200, user, "user Cover is updated successfully"));
   }
 );
-export const updateUserAvatat = asyncHandler(
+export const updateUserAvatar = asyncHandler(
   async (req: userRequest, res: Response) => {
     const files = req.files as any;
     const avatarPath = files?.path;
