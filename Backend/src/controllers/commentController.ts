@@ -2,9 +2,7 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.ts";
 import { ApiError } from "../utils/apiError.ts";
 import { Comment } from "../models/commentModel.ts";
-import { uploadOnCloudinary } from "../utils/cloudinary.ts";
 import { ApiResponse } from "../utils/apiResponse.ts";
-import jwt from "jsonwebtoken";
 import mongoose, { isValidObjectId } from "mongoose";
 
 interface userRequest extends Request {

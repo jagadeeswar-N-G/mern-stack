@@ -18,6 +18,7 @@ import userRouter from "./routes/userRouter.ts"
 import tweetRouter from "./routes/tweetRouter.ts";
 import videoRouter from "./routes/videoRouter.ts"
 import commentRouter from "./routes/commentRouter.ts"
+import subscriptionRoter from "./routes/subscriptionRoter.ts"
 
 
 
@@ -26,5 +27,6 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/tweets", tweetRouter);
 app.use("/api/v1/videos", videoRouter);
 app.use("/api/v1/comments", commentRouter );
+app.use("/api/v1/subscriptions", subscriptionRoter);
 
 
