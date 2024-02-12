@@ -28,10 +28,10 @@ const videoSchema = new mongoose.Schema(
       default: 0,
     },
     published: {
-      type: true,
+      type: Boolean,
       default: true,
     },
-    owner: {
+    ownerId: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },

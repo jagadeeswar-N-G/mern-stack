@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 interface userRequest extends Request {
   user?: any;
 }
-const generateAccessAndRefreshToken = async (userId: unknown) => {
+export const generateAccessAndRefreshToken = async (userId: unknown) => {
   try {
     const user = await User.findById(userId);
     const accessToken = user.generateAccessToken();
