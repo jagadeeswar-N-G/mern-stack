@@ -4,10 +4,9 @@ import { ApiError } from "../utils/apiError.ts";
 import { Comment } from "../models/commentModel.ts";
 import { ApiResponse } from "../utils/apiResponse.ts";
 import mongoose, { isValidObjectId } from "mongoose";
+import { UserRequest } from "../constants.ts";
 
-interface userRequest extends Request {
-  user?: any;
-}
+
 
 export const getVideoComments = asyncHandler(
   async (req: Request, res: Response) => {
@@ -32,25 +31,23 @@ export const getVideoComments = asyncHandler(
   }
 );
 
-export const addComment = asyncHandler(
-  async (req: userRequest, res: Response) => {
-    // TODO: add a comment to a video
-    const { videoId } = req.params;
-    const { content } = req.body as any;
-    if (!isValidObjectId(videoId)) {
-      throw new ApiError(400, "Invalid video id");
-    }
-    if (!content || content?.trim() === "") {
-      throw new ApiError(400, "Content is required");
-    }
-    const comment = await Comment.create({
-      content,
-      videoId,
-      ownerId: req.user._id,
-    });
-    return res.status(201).json(new ApiResponse(201, comment));
+export const addComment = asyncHandler(async (req: UserRequest, res: Response) => {
+  // TODO: add a comment to a video
+  const { videoId } = req.params;
+  const { content } = req.body as any;
+  if (!isValidObjectId(videoId)) {
+    throw new ApiError(400, "Invalid video id");
   }
-);
+  if (!content || content?.trim() === "") {
+    throw new ApiError(400, "Content is required");
+  }
+  const comment = await Comment.create({
+    content,
+    videoId,
+    ownerId: req.user._id,
+  });
+  return res.status(201).json(new ApiResponse(201, comment));
+});
 
 export const updateComment = asyncHandler(
   async (req: Request, res: Response) => {

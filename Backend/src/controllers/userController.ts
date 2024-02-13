@@ -6,10 +6,9 @@ import { uploadOnCloudinary } from "../utils/cloudinary.ts";
 import { ApiResponse } from "../utils/apiResponse.ts";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import { UserRequest } from "../constants.ts";
 
-interface userRequest extends Request {
-  user?: any;
-}
+
 export const generateAccessAndRefreshToken = async (userId: unknown) => {
   try {
     const user = await User.findById(userId);
@@ -140,7 +139,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const logoutUser = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     await User.findByIdAndUpdate(
       req.user._id,
       {
@@ -218,9 +217,9 @@ export const refreshAccessToken = asyncHandler(
 );
 
 export const changePassword = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const { oldPassword, newPassword } = req.body;
-    const user = await User.findById(req.user?.id);
+    const user = await User.findById(req.user?._id);
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
     if (!isPasswordCorrect) {
@@ -237,7 +236,7 @@ export const changePassword = asyncHandler(
 );
 
 export const getCurrentUser = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     res
       .status(200)
       .json({ message: "successfully fetched the user", user: req.user });
@@ -245,7 +244,7 @@ export const getCurrentUser = asyncHandler(
 );
 
 export const updateAccountDetails = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const { fullName, email } = req.body;
 
     if (!fullName || !email) {
@@ -270,7 +269,7 @@ export const updateAccountDetails = asyncHandler(
 );
 
 export const updateUserCover = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const files = req.files as any;
     const coverPath = files?.path;
 
@@ -296,7 +295,7 @@ export const updateUserCover = asyncHandler(
   }
 );
 export const updateUserAvatar = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const files = req.files as any;
     const avatarPath = files?.path;
 
@@ -323,7 +322,7 @@ export const updateUserAvatar = asyncHandler(
 );
 
 export const getUserChannelProfile = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const {username} = req.params;
     if(!username.trim()) {
         throw new ApiError(400, "username is required");
@@ -392,7 +391,7 @@ export const getUserChannelProfile = asyncHandler(
 );
 
 export const getUserHistory = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const user = await User.aggregate([
       {
         $match: {

@@ -7,13 +7,11 @@ import { ApiResponse } from "../utils/apiResponse.ts";
 import jwt from "jsonwebtoken";
 import express, { Request, Response } from "express";
 import {Subscriber} from "../models/subscriptionModel.ts"
+import { UserRequest } from "../constants.ts";
 
 
-interface userRequest extends Request {
-  user?: any;
-}
 export const toggleSubscription = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const {channelId} = req.params;
     if (!isValidObjectId(channelId)) {
       return res.json(new ApiError(400, "Invalid channel id"));
@@ -67,7 +65,7 @@ export const toggleSubscription = asyncHandler(
 
 // controller to return subscriber list of a channel
 export const getUserChannelSubscribers = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const { subscriberId } = req.params;
  
     
@@ -85,7 +83,7 @@ export const getUserChannelSubscribers = asyncHandler(
 
 // controller to return channel list to which user has subscribed
 export const getSubscribedChannels = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const { channelId } = req.params;
     console.log(req.params, "channel id");
     if (!isValidObjectId(channelId)) {

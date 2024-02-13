@@ -5,10 +5,8 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { Request, Response } from "express";
 import { uploadOnCloudinary } from "../utils/cloudinary";
 import { isValidObjectId } from "mongoose";
+import { UserRequest } from "../constants";
 
-interface userRequest extends Request {
-  user?: any;
-}
 
 export const getAllVideos = asyncHandler(
   async (req: Request, res: Response) => {
@@ -77,7 +75,7 @@ export const getAllVideos = asyncHandler(
 );
 
 export const publishAVideo = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const { title, description } = req.body;
     // TODO: get video, upload to cloudinary, create video
     // TODO: save video to database
@@ -158,7 +156,7 @@ export const updateVideo = asyncHandler(async (req: Request, res: Response) => {
 });
 
 
-export const deleteVideo = asyncHandler(async (req: userRequest, res: Response) => {
+export const deleteVideo = asyncHandler(async (req: UserRequest, res: Response) => {
   const { videoId } = req.params;
   //TODO: delete video
 
@@ -226,7 +224,7 @@ export const updateThumbnail = asyncHandler( async (req: Request, res: Response)
   return res.json(new ApiResponse(200, updatedVideo, "Thumbnail updated successfully"));
 })
 
-export const getVideoViews = asyncHandler(async (req: userRequest, res: Response) => {
+export const getVideoViews = asyncHandler(async (req: UserRequest, res: Response) => {
   const { videoId } = req.params;
   if (!isValidObjectId(videoId)) {
     return res.json(new ApiError(400, "Invalid video id"));

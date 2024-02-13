@@ -6,12 +6,11 @@ import { uploadOnCloudinary } from "../utils/cloudinary.ts";
 import { ApiResponse } from "../utils/apiResponse.ts";
 import { Tweet } from "../models/tweetModel.ts";
 import express, { Request, Response } from "express";
+import { UserRequest } from "../constants.ts";
 
-interface userRequest extends Request {
-  user?: any
-}
+
 export const createTweet = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     // TODO: Validate request
     // TODO: Create tweet
     // TODO: Save tweet
@@ -48,7 +47,7 @@ export const getUserTweets = asyncHandler(
 );
 
 export const updateTweet = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     //TODO: update tweet
     const { tweetId } = req.params;
 
@@ -77,7 +76,7 @@ export const updateTweet = asyncHandler(
 );
 
 export const deleteTweet = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     //TODO: delete tweet
     const { tweetId } = req.params;
 

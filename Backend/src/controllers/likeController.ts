@@ -8,13 +8,11 @@ import { CommentLike } from "../models/commentLikeModal.ts";
 import { Comment } from "../models/commentModel.ts";
 import {Tweet} from "../models/tweetModel.ts"
 import {TweetLike} from "../models/tweetLikeModal.ts"
+import { UserRequest } from "../constants.ts";
 
-interface userRequest extends Request {
-  user?: any;
-}
 
 export const toggleVideoLike = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const { videoId } = req.params;
     if (!isValidObjectId(videoId)) {
       throw new ApiError(400, "Invalid video id");
@@ -41,19 +39,20 @@ export const toggleVideoLike = asyncHandler(
   }
 );
 
-export const toggleCommentLike = asyncHandler(async (req: userRequest, res: Response) => {
-  const { commentId } = req.params;
-  //TODO: toggle like on comment
-  if(!isValidObjectId(commentId)) {
-    throw new ApiError(400, "Invalid comment id");
-  }
-  //TODO: get comment from db
-  //TODO: toggle like on comment
-  //TODO: return like status
-   const comment = await Comment.findById(commentId);
-   if(!comment) {
-    throw new ApiError(404, "Comment not found");
-   }
+export const toggleCommentLike = asyncHandler(
+  async (req: UserRequest, res: Response) => {
+    const { commentId } = req.params;
+    //TODO: toggle like on comment
+    if (!isValidObjectId(commentId)) {
+      throw new ApiError(400, "Invalid comment id");
+    }
+    //TODO: get comment from db
+    //TODO: toggle like on comment
+    //TODO: return like status
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      throw new ApiError(404, "Comment not found");
+    }
     const user = req.user;
     const userHasLiked = await CommentLike.findOne({
       commentId: commentId,
@@ -67,11 +66,14 @@ export const toggleCommentLike = asyncHandler(async (req: userRequest, res: Resp
       await CommentLike.create({ commentId: commentId, userId: user._id });
     }
 
-    return res.json(new ApiResponse(200, userHasLiked, "user like the comment successfully"));
-});
+    return res.json(
+      new ApiResponse(200, userHasLiked, "user like the comment successfully")
+    );
+  }
+);
 
 export const toggleTweetLike = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     const { tweetId } = req.params;
     //TODO: toggle like on tweet
     if (!isValidObjectId(tweetId)) {
@@ -102,21 +104,23 @@ export const toggleTweetLike = asyncHandler(
   }
 );
 
-export const getLikedVideos = asyncHandler(async (req: userRequest, res: Response) => {
+export const getLikedVideos = asyncHandler(async (req: UserRequest, res: Response) => {
   //TODO: get all liked videos
   const user = req.user;
   const likedVideos = await VideoLike.find({ userId: user._id });
   return res.json(new ApiResponse(200, likedVideos));
 });
 
-export const getLikedComments = asyncHandler(async (req: userRequest, res: Response) => {
-  //TODO: get all liked comments
-  const user = req.user;
-  const likedComments = await CommentLike.find({ userId: user._id });
-  return res.json(new ApiResponse(200, likedComments));
-});
+export const getLikedComments = asyncHandler(
+  async (req: UserRequest, res: Response) => {
+    //TODO: get all liked comments
+    const user = req.user;
+    const likedComments = await CommentLike.find({ userId: user._id });
+    return res.json(new ApiResponse(200, likedComments));
+  }
+);
 
-export const getLikedTweets = asyncHandler(async (req: userRequest, res: Response) => {
+export const getLikedTweets = asyncHandler(async (req: UserRequest, res: Response) => {
   //TODO: get all liked tweets
   const user = req.user;
   const likedTweets = await TweetLike.find({ userId: user._id });

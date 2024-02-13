@@ -5,10 +5,11 @@ import { Playlist } from "../models/playlistModel.ts";
 import { ApiResponse } from "../utils/apiResponse.ts";
 import { isValidObjectId } from "mongoose";
 import { Video } from "../models/videoModel.ts";
-interface userRequest extends Request {
-  user?: any;
-}
-export const createPlaylist = asyncHandler(async (req: userRequest, res: Response) => {
+import { ObjectId } from "mongoose";
+import { UserRequest } from "../constants.ts";
+
+
+export const createPlaylist = asyncHandler(async (req: UserRequest, res: Response) => {
   const { name, description } = req.body;
 
   //TODO: create playlist

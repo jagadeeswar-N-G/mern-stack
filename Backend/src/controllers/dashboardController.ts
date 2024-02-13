@@ -4,12 +4,10 @@ import { ApiError } from "../utils/apiError.ts";
 import { User } from "../models/userModel.ts";
 import { ApiResponse } from "../utils/apiResponse.ts";
 import { Request, Response } from "express";
+import { UserRequest } from "../constants.ts";
 
-interface userRequest extends Request {
-  user?: any;
-}
 export const getChannelStats = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     // TODO: Get the channel stats like total video views, total subscribers, total videos, total likes etc.
     // TODO: Get the channel videos
     // TODO: Get the channel subscribers
@@ -23,7 +21,7 @@ export const getChannelStats = asyncHandler(
 );
 
 export const getChannelVideos = asyncHandler(
-  async (req: userRequest, res: Response) => {
+  async (req: UserRequest, res: Response) => {
     // TODO: Get all the videos uploaded by the channel
     const user = req.user._id;
     if (!isValidObjectId(user)) {
@@ -49,6 +47,8 @@ export const getChannelVideos = asyncHandler(
         },
       },
     ]);
-    return res.json(new ApiResponse(200, totalVideos, "Videos fetched successfully"));;
+    return res.json(
+      new ApiResponse(200, totalVideos, "Videos fetched successfully")
+    );
   }
 );
