@@ -20,6 +20,8 @@ import videoRouter from "./routes/videoRouter.ts"
 import commentRouter from "./routes/commentRouter.ts"
 import subscriptionRoter from "./routes/subscriptionRoter.ts"
 import likeRouter from "./routes/likeRouter.ts"
+import dashboardRouter from "./routes/dashboardRouter.ts"
+import playlistRouter from "./routes/playlistRouter.ts"
 
 
 
@@ -30,5 +32,7 @@ app.use("/api/v1/videos", videoRouter);
 app.use("/api/v1/comments", commentRouter );
 app.use("/api/v1/subscriptions", subscriptionRoter);
 app.use("/api/v1/likes", likeRouter);
+app.use("/api/v1/dashboard", dashboardRouter);
+app.use("/api/v1/playlist", playlistRouter);
 
 

@@ -226,3 +226,30 @@ export const updateThumbnail = asyncHandler( async (req: Request, res: Response)
   return res.json(new ApiResponse(200, updatedVideo, "Thumbnail updated successfully"));
 })
 
+export const getVideoViews = asyncHandler(async (req: userRequest, res: Response) => {
+  const { videoId } = req.params;
+  if (!isValidObjectId(videoId)) {
+    return res.json(new ApiError(400, "Invalid video id"));
+  }
+  const video = await Video.findById(videoId);
+  if (!video) {
+    res.status(404);
+    throw new Error("Video not found");
+  }
+  const user = req.user._id;
+
+  // Check if user has already viewed this video
+  const userViews = video.userViews || [];
+  if (userViews.includes(user)) {
+    // User has already viewed, don't increment
+    const views = video.views;
+    return res.json(new ApiResponse(200, views, "Views fetched successfully"));
+  } else {
+    // Increment views since user has not viewed yet
+    video.views++;
+    video.userViews.push(user);
+    await video.save();
+    const views = video.views;
+    return res.json(new ApiResponse(200, views, "Views fetched successfully"));
+  }
+});

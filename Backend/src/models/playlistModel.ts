@@ -11,8 +11,8 @@ const playlistSchema = new Schema(
       required: true,
     },
     videos: {
-      type: Schema.Types.ObjectId,
-      ref: "Video",
+     type : [{ type: Schema.Types.ObjectId, ref: "Video" }],
+     default: [],
     },
     ownerId: {
       type: Schema.Types.ObjectId,

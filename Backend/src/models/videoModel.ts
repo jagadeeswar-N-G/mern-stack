@@ -35,6 +35,10 @@ const videoSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    userViews: {
+      type: [{ type: Schema.Types.ObjectId, ref: "User" }],
+      default: [],
+    }
   },
   {
     timestamps: true,
