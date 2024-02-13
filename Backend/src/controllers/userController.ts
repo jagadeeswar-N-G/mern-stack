@@ -7,6 +7,14 @@ import { ApiResponse } from "../utils/apiResponse.ts";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { UserRequest } from "../constants.ts";
+import {z } from "zod";
+
+const registerUserSchema = z.object({
+  username: z.string(),
+  email: z.string().email(),
+  fullName: z.string(),
+  password: z.string(),
+});
 
 
 export const generateAccessAndRefreshToken = async (userId: unknown) => {
@@ -34,7 +42,10 @@ export const registerUser = asyncHandler(
     // remove password and refresh toekn field from responce
     // check for the user creation
     // return res
-    const { username, email, fullName, password } = req.body;
+    const { username, email, fullName, password } = registerUserSchema.parse(
+      req.body
+    );
+    
     if (
       [username, email, fullName, password].some(
         (field) => field?.trim() === ""
@@ -92,6 +103,7 @@ export const registerUser = asyncHandler(
 
 export const loginUser = asyncHandler(async (req: Request, res: Response) => {
   const { email, username, password } = req.body;
+
   if (!username && !email) {
     throw new ApiError(400, "username or password is required");
   }
