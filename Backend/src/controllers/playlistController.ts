@@ -51,7 +51,6 @@ export const addVideoToPlaylist = asyncHandler(async (req: Request, res: Respons
     throw new ApiError(400, "Invalid video id");
   }
   const playlist = await Playlist.findById(playlistId);
-  console.log(playlist);
   
   if(!playlist) {
     throw new ApiError(400, "Playlist not found");
